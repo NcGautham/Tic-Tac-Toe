@@ -120,7 +120,11 @@ export const TicTacToe = () => {
 
     return (
         <div className="container">
-            <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme" />
+            <button 
+                className="theme-toggle" 
+                onClick={toggleTheme} 
+                aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            />
             
             <div className="Board">
                 <div className="row1">
@@ -157,6 +161,7 @@ export const TicTacToe = () => {
                     </div>
                 </div>
             </div>
+            
             <button className="Reset" onClick={resetGame}>
                 Reset
             </button>
@@ -172,7 +177,7 @@ export const TicTacToe = () => {
 
             <div className={`win-overlay ${showWinOverlay ? 'show' : ''}`}>
                 {winner && (
-                    <>
+                    <div className="win-overlay-content">
                         <img 
                             src={winner === 'X' ? cross_icon : circle_icon} 
                             alt={winner} 
@@ -182,7 +187,7 @@ export const TicTacToe = () => {
                         <button className="play-again-btn" onClick={resetGame}>
                             Play Again
                         </button>
-                    </>
+                    </div>
                 )}
             </div>
         </div>
