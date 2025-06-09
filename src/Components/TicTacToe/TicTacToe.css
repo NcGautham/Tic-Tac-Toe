@@ -1,14 +1,19 @@
 body {
     margin: 0;
-    height: 100vh; 
+    min-height: 100vh;
     display: flex;
-    justify-content: center; 
+    justify-content: center;
     align-items: center;
-  }
-
-.container{
-    text-align: center;
+    background-color: #f0f0f0;
 }
+
+.container {
+    text-align: center;
+    padding: 20px;
+    max-width: 100%;
+    transition: opacity 0.3s ease-in-out;
+}
+
 .title{
     margin-top: 50px;
     color: rgb(255, 255, 255);
@@ -17,54 +22,81 @@ body {
     justify-content: center;
 }
 
-.Reset{
-    width: 150px;
-    height:50px;
-    border: 2px solid white;
-    outline: black;
-    cursor: pointer;
-    border-radius: 50px;
-    background-color: rgb(0, 0, 0);
-    color: rgb(255, 255, 255);
-    font-size: 20px;
-    margin-top: 25px;
-    margin-bottom: 50px;
+.Board {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: auto;
+    max-width: 100%;
+    transition: transform 0.3s ease-in-out;
 }
 
-.boxes{
+.row1, .row2, .row3 {
     display: flex;
-    height: 180px;
-    width: 180px;
+    gap: 10px;
+    justify-content: center;
+}
+
+.boxes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1;
+    width: min(180px, 30vw);
     background: rgb(255, 255, 255);
     border: 4px solid rgb(0, 0, 0);
     border-radius: 12px;
     cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    overflow: hidden;
 }
 
-.Board{
-    display: flex;
-    justify-content:center;
-    height: 600px;
-    width: 564px;
-    display:flex;
-    margin: auto;
+.boxes:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
-.boxes img{
-    margin: 20px 20px;
+.boxes img {
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+    animation: popIn 0.3s ease-out;
 }
 
+/* Winning line animation */
+.boxes.winning {
+    animation: winningPulse 1s ease-in-out infinite;
+}
 
-.Reset:hover {
+/* Reset button styles */
+.Reset {
+    width: min(150px, 40vw);
+    height: 50px;
+    border: 2px solid black;
+    outline: none;
+    cursor: pointer;
+    border-radius: 50px;
+    background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    font-size: clamp(16px, 4vw, 20px);
+    margin-top: 25px;
+    margin-bottom: 50px;
+    transition: all 0.3s ease-in-out;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.Reset:hover, .Reset:active {
     background-color: #ffffff;
     color: black;
-    border: 2px solid white;
+    transform: scale(1.05);
 }
 
-/* Custom Alert Box Styling */
+/* Alert box styles */
 .alert-box {
     position: fixed;
-    top: 47%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: rgba(0, 0, 0, 0.8);
@@ -73,6 +105,7 @@ body {
     color: white;
     text-align: center;
     z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
 }
 
 .alert-content {
@@ -83,21 +116,80 @@ body {
 
 .alert-content p {
     margin: 0;
-    font-size: 1.5rem;
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
 }
 
 .close-btn {
     margin-top: 15px;
     padding: 10px 20px;
-    font-size: 1rem;
+    font-size: clamp(14px, 3vw, 16px);
     background-color: #000000;
     color: white;
     border: none;
     cursor: pointer;
     border-radius: 5px;
+    transition: all 0.2s ease-in-out;
+    touch-action: manipulation;
 }
 
-.close-btn:hover {
+.close-btn:hover, .close-btn:active {
     background-color: #ffffff;
     color: black;
+    transform: scale(1.05);
+}
+
+/* Animations */
+@keyframes popIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    70% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes winningPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -48%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* Media Queries */
+@media (max-width: 600px) {
+    .boxes {
+        width: min(120px, 28vw);
+    }
+    
+    .Reset {
+        width: min(120px, 50vw);
+        height: 45px;
+    }
+}
+
+@media (max-width: 400px) {
+    .boxes {
+        width: min(100px, 25vw);
+    }
 }
