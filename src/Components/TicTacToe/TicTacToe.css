@@ -388,6 +388,24 @@ body {
     -webkit-backdrop-filter: blur(8px);
 }
 
+.draw-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        linear-gradient(45deg, var(--glass-bg) 25%, transparent 25%),
+        linear-gradient(-45deg, var(--glass-bg) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, var(--glass-bg) 75%),
+        linear-gradient(-45deg, transparent 75%, var(--glass-bg) 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    opacity: 0.1;
+    animation: gridFade 2s ease-in-out infinite alternate;
+}
+
 .draw-overlay.show {
     opacity: 1;
     visibility: visible;
@@ -403,58 +421,70 @@ body {
     transform: scale(0.9);
     opacity: 0;
     animation: modalPop 0.5s ease forwards;
-}
-
-.draw-icon {
-    width: 120px;
-    height: 120px;
-    margin-bottom: 1.5rem;
-    animation: popIn 0.5s ease-out;
-    filter: drop-shadow(0 4px 8px var(--shadow-color));
-    opacity: 0.8;
+    position: relative;
+    z-index: 1;
 }
 
 .draw-text {
-    font-size: clamp(2rem, 5vw, 3rem);
+    font-size: clamp(2.5rem, 6vw, 4rem);
     color: var(--text-color);
     margin-bottom: 2rem;
-    font-weight: 700;
+    font-weight: 800;
     animation: slideUp 0.5s ease-out;
     text-shadow: 0 2px 4px var(--shadow-color);
+    letter-spacing: -0.02em;
+    position: relative;
 }
 
-/* Sound Toggle Button */
-.sound-toggle {
-    position: fixed;
-    top: 1.5rem;
-    right: 5rem;
-    width: 2.5rem;
-    height: 2.5rem;
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    border-radius: 50%;
+.draw-text::after {
+    content: '';
+    position: absolute;
+    bottom: -0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 4px;
+    background: var(--text-color);
+    border-radius: 2px;
+    opacity: 0.2;
+}
+
+.draw-overlay .play-again-btn {
+    font-size: clamp(1.1rem, 3vw, 1.3rem);
+    padding: 1rem 2.5rem;
+    margin-top: 1rem;
+    background: var(--button-bg);
+    color: var(--button-text);
+    border: 2px solid var(--button-text);
+    border-radius: 50px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 2px 8px var(--shadow-color);
-    z-index: 1000;
-    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    animation: fadeIn 0.5s ease-out 0.3s both;
 }
 
-.sound-toggle:hover {
-    transform: scale(1.1);
+.draw-overlay .play-again-btn:hover {
+    background: var(--button-hover-bg);
+    color: var(--button-hover-text);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px var(--shadow-color);
 }
 
-.sound-toggle.muted::before {
-    content: '🔇';
+.draw-overlay .play-again-btn:active {
+    transform: translateY(0);
 }
 
-.sound-toggle:not(.muted)::before {
-    content: '🔊';
+@keyframes gridFade {
+    0% {
+        opacity: 0.05;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0.15;
+        transform: scale(1.1);
+    }
 }
 
 /* Media Queries */
@@ -502,21 +532,12 @@ body {
         height: 100px;
     }
 
-    .sound-toggle {
-        top: 1rem;
-        right: 4rem;
-        width: 2rem;
-        height: 2rem;
-        font-size: 1rem;
-    }
-
     .draw-overlay-content {
         padding: 2rem;
     }
 
-    .draw-icon {
-        width: 100px;
-        height: 100px;
+    .draw-text {
+        font-size: clamp(2rem, 5vw, 3rem);
     }
 }
 
@@ -534,16 +555,15 @@ body {
         height: 80px;
     }
 
-    .sound-toggle {
-        right: 3.5rem;
-    }
-
     .draw-overlay-content {
         padding: 1.5rem;
     }
 
-    .draw-icon {
-        width: 80px;
-        height: 80px;
+    .draw-text {
+        font-size: clamp(1.8rem, 4vw, 2.5rem);
+    }
+
+    .draw-overlay .play-again-btn {
+        padding: 0.8rem 2rem;
     }
 }

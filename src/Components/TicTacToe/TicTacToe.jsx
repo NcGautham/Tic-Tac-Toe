@@ -153,11 +153,6 @@ export const TicTacToe = () => {
                 onClick={toggleTheme} 
                 aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
             />
-            <button 
-                className={`sound-toggle ${isMuted ? 'muted' : ''}`}
-                onClick={toggleSound}
-                aria-label={isMuted ? 'Unmute sounds' : 'Mute sounds'}
-            />
             
             <div className="Board">
                 <div className="row1">
@@ -226,7 +221,6 @@ export const TicTacToe = () => {
 
             <div className={`draw-overlay ${showDrawOverlay ? 'show' : ''}`}>
                 <div className="draw-overlay-content">
-                    <div className="draw-icon">🤝</div>
                     <h2 className="draw-text">It's a Draw!</h2>
                     <button className="play-again-btn" onClick={resetGame}>
                         Play Again
