@@ -15,6 +15,18 @@ export const TicTacToe = () => {
     const [alertMessage, setAlertMessage] = useState('');
     const [showAlert, setShowAlert] = useState(false);
     const [winningLine, setWinningLine] = useState([]);
+    const [theme, setTheme] = useState(() => {
+        const savedTheme = localStorage.getItem('theme');
+        return savedTheme || 'dark';
+    });
+    const [showWinOverlay, setShowWinOverlay] = useState(false);
+    const [winner, setWinner] = useState('');
+
+    // Apply theme on mount and when it changes
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    }, [theme]);
 
     // Haptic feedback function
     const vibrate = useCallback(() => {
@@ -22,6 +34,11 @@ export const TicTacToe = () => {
             navigator.vibrate(50);
         }
     }, []);
+
+    const toggleTheme = () => {
+        setTheme(prevTheme => prevTheme === 'dark' ? 'light' : 'dark');
+        vibrate();
+    };
 
     useEffect(() => {
         checkWin(board);
@@ -32,7 +49,7 @@ export const TicTacToe = () => {
 
         vibrate();
         moveSound.currentTime = 0;
-        moveSound.play().catch(() => {}); // Ignore autoplay restrictions
+        moveSound.play().catch(() => {});
 
         const newBoard = [...board];
         if (count % 2 === 0) {
@@ -61,9 +78,11 @@ export const TicTacToe = () => {
             const [a, b, c] = combination;
             if (currentBoard[a] && currentBoard[a] === currentBoard[b] && currentBoard[a] === currentBoard[c]) {
                 setLock(true);
+                setWinner(currentBoard[a].toUpperCase());
                 setAlertMessage(`${currentBoard[a].toUpperCase()} wins!`);
                 setShowAlert(true);
                 setWinningLine(combination);
+                setShowWinOverlay(true);
                 vibrate();
                 winSound.currentTime = 0;
                 winSound.play().catch(() => {});
@@ -88,6 +107,8 @@ export const TicTacToe = () => {
         setShowAlert(false);
         setAlertMessage('');
         setWinningLine([]);
+        setShowWinOverlay(false);
+        setWinner('');
     };
 
     const closeAlert = () => {
@@ -99,9 +120,8 @@ export const TicTacToe = () => {
 
     return (
         <div className="container">
-            {/* <h1 className="title">
-                TicTacToe Game in <span>React</span>
-            </h1> */}
+            <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme" />
+            
             <div className="Board">
                 <div className="row1">
                     <div className={`boxes ${isWinningBox(0) ? 'winning' : ''}`} onClick={() => toggle(0)}>
@@ -149,6 +169,22 @@ export const TicTacToe = () => {
                     </div>
                 </div>
             )}
+
+            <div className={`win-overlay ${showWinOverlay ? 'show' : ''}`}>
+                {winner && (
+                    <>
+                        <img 
+                            src={winner === 'X' ? cross_icon : circle_icon} 
+                            alt={winner} 
+                            className="win-icon"
+                        />
+                        <h2 className="win-text">{winner} Wins!</h2>
+                        <button className="play-again-btn" onClick={resetGame}>
+                            Play Again
+                        </button>
+                    </>
+                )}
+            </div>
         </div>
     );
 };

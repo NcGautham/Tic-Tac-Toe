@@ -1,10 +1,37 @@
+/* Theme variables */
+:root {
+    --bg-color: #000000;
+    --text-color: #ffffff;
+    --box-bg: #ffffff;
+    --box-border: #000000;
+    --overlay-bg: rgba(0, 0, 0, 0.9);
+    --button-bg: #000000;
+    --button-text: #ffffff;
+    --button-hover-bg: #ffffff;
+    --button-hover-text: #000000;
+}
+
+[data-theme="light"] {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --box-bg: #f0f0f0;
+    --box-border: #000000;
+    --overlay-bg: rgba(255, 255, 255, 0.95);
+    --button-bg: #000000;
+    --button-text: #ffffff;
+    --button-hover-bg: #ffffff;
+    --button-hover-text: #000000;
+}
+
 body {
     margin: 0;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f0f0f0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .container {
@@ -176,8 +203,126 @@ body {
     }
 }
 
+/* Theme Toggle Button */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 60px;
+    height: 30px;
+    background: var(--button-bg);
+    border: 2px solid var(--button-text);
+    border-radius: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle::before {
+    content: '';
+    width: 24px;
+    height: 24px;
+    background: var(--button-text);
+    border-radius: 50%;
+    transform: translateX(0);
+    transition: transform 0.3s ease;
+}
+
+[data-theme="light"] .theme-toggle::before {
+    transform: translateX(30px);
+}
+
+/* Win Overlay */
+.win-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--overlay-bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.win-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.win-icon {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 20px;
+    animation: popIn 0.5s ease-out;
+}
+
+.win-text {
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--text-color);
+    margin-bottom: 30px;
+    animation: slideUp 0.5s ease-out;
+}
+
+.play-again-btn {
+    padding: 15px 30px;
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    background: var(--button-bg);
+    color: var(--button-text);
+    border: 2px solid var(--button-text);
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: fadeIn 0.5s ease-out 0.3s both;
+}
+
+.play-again-btn:hover {
+    background: var(--button-hover-bg);
+    color: var(--button-hover-text);
+    transform: scale(1.05);
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
 /* Media Queries */
 @media (max-width: 600px) {
+    .theme-toggle {
+        top: 10px;
+        right: 10px;
+        width: 50px;
+        height: 25px;
+    }
+
+    .theme-toggle::before {
+        width: 20px;
+        height: 20px;
+    }
+
+    [data-theme="light"] .theme-toggle::before {
+        transform: translateX(25px);
+    }
+
+    .win-icon {
+        width: 120px;
+        height: 120px;
+    }
+
     .boxes {
         width: min(120px, 28vw);
     }
