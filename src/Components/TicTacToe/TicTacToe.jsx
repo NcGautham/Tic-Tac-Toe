@@ -8,6 +8,11 @@ const moveSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/25
 const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3');
 const drawSound = new Audio('https://assets.mixkit.co/active_storage/sfx/1434/1434-preview.mp3');
 
+// Configure sounds
+[moveSound, winSound, drawSound].forEach(sound => {
+    sound.volume = 0.5; // Set volume to 50%
+});
+
 export const TicTacToe = () => {
     const [board, setBoard] = useState(Array(9).fill(''));
     const [count, setCount] = useState(0);
@@ -20,13 +25,25 @@ export const TicTacToe = () => {
         return savedTheme || 'dark';
     });
     const [showWinOverlay, setShowWinOverlay] = useState(false);
+    const [showDrawOverlay, setShowDrawOverlay] = useState(false);
     const [winner, setWinner] = useState('');
+    const [isMuted, setIsMuted] = useState(() => {
+        const savedMute = localStorage.getItem('muted');
+        return savedMute === 'true';
+    });
 
-    // Apply theme on mount and when it changes
+    // Apply theme and mute state on mount and when they change
     useEffect(() => {
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('theme', theme);
     }, [theme]);
+
+    useEffect(() => {
+        localStorage.setItem('muted', isMuted);
+        [moveSound, winSound, drawSound].forEach(sound => {
+            sound.muted = isMuted;
+        });
+    }, [isMuted]);
 
     // Haptic feedback function
     const vibrate = useCallback(() => {
@@ -40,6 +57,18 @@ export const TicTacToe = () => {
         vibrate();
     };
 
+    const toggleSound = () => {
+        setIsMuted(prev => !prev);
+        vibrate();
+    };
+
+    const playSound = useCallback((sound) => {
+        if (!isMuted) {
+            sound.currentTime = 0;
+            sound.play().catch(() => {});
+        }
+    }, [isMuted]);
+
     useEffect(() => {
         checkWin(board);
     }, [board]);
@@ -48,8 +77,7 @@ export const TicTacToe = () => {
         if (lock || board[index]) return;
 
         vibrate();
-        moveSound.currentTime = 0;
-        moveSound.play().catch(() => {});
+        playSound(moveSound);
 
         const newBoard = [...board];
         if (count % 2 === 0) {
@@ -84,8 +112,7 @@ export const TicTacToe = () => {
                 setWinningLine(combination);
                 setShowWinOverlay(true);
                 vibrate();
-                winSound.currentTime = 0;
-                winSound.play().catch(() => {});
+                playSound(winSound);
                 return;
             }
         }
@@ -94,8 +121,8 @@ export const TicTacToe = () => {
             setLock(true);
             setAlertMessage("It's a draw!");
             setShowAlert(true);
-            drawSound.currentTime = 0;
-            drawSound.play().catch(() => {});
+            setShowDrawOverlay(true);
+            playSound(drawSound);
         }
     };
 
@@ -108,6 +135,7 @@ export const TicTacToe = () => {
         setAlertMessage('');
         setWinningLine([]);
         setShowWinOverlay(false);
+        setShowDrawOverlay(false);
         setWinner('');
     };
 
@@ -124,6 +152,11 @@ export const TicTacToe = () => {
                 className="theme-toggle" 
                 onClick={toggleTheme} 
                 aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            />
+            <button 
+                className={`sound-toggle ${isMuted ? 'muted' : ''}`}
+                onClick={toggleSound}
+                aria-label={isMuted ? 'Unmute sounds' : 'Mute sounds'}
             />
             
             <div className="Board">
@@ -189,6 +222,16 @@ export const TicTacToe = () => {
                         </button>
                     </div>
                 )}
+            </div>
+
+            <div className={`draw-overlay ${showDrawOverlay ? 'show' : ''}`}>
+                <div className="draw-overlay-content">
+                    <div className="draw-icon">🤝</div>
+                    <h2 className="draw-text">It's a Draw!</h2>
+                    <button className="play-again-btn" onClick={resetGame}>
+                        Play Again
+                    </button>
+                </div>
             </div>
         </div>
     );

@@ -368,6 +368,95 @@ body {
     }
 }
 
+/* Draw Overlay */
+.draw-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--overlay-bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.draw-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.draw-overlay-content {
+    background: var(--glass-bg);
+    padding: 3rem;
+    border-radius: 24px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px var(--shadow-color);
+    text-align: center;
+    transform: scale(0.9);
+    opacity: 0;
+    animation: modalPop 0.5s ease forwards;
+}
+
+.draw-icon {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 1.5rem;
+    animation: popIn 0.5s ease-out;
+    filter: drop-shadow(0 4px 8px var(--shadow-color));
+    opacity: 0.8;
+}
+
+.draw-text {
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--text-color);
+    margin-bottom: 2rem;
+    font-weight: 700;
+    animation: slideUp 0.5s ease-out;
+    text-shadow: 0 2px 4px var(--shadow-color);
+}
+
+/* Sound Toggle Button */
+.sound-toggle {
+    position: fixed;
+    top: 1.5rem;
+    right: 5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px var(--shadow-color);
+    z-index: 1000;
+    font-size: 1.2rem;
+}
+
+.sound-toggle:hover {
+    transform: scale(1.1);
+}
+
+.sound-toggle.muted::before {
+    content: '🔇';
+}
+
+.sound-toggle:not(.muted)::before {
+    content: '🔊';
+}
+
 /* Media Queries */
 @media (max-width: 768px) {
     .container {
@@ -412,6 +501,23 @@ body {
         width: 100px;
         height: 100px;
     }
+
+    .sound-toggle {
+        top: 1rem;
+        right: 4rem;
+        width: 2rem;
+        height: 2rem;
+        font-size: 1rem;
+    }
+
+    .draw-overlay-content {
+        padding: 2rem;
+    }
+
+    .draw-icon {
+        width: 100px;
+        height: 100px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -424,6 +530,19 @@ body {
     }
 
     .win-icon {
+        width: 80px;
+        height: 80px;
+    }
+
+    .sound-toggle {
+        right: 3.5rem;
+    }
+
+    .draw-overlay-content {
+        padding: 1.5rem;
+    }
+
+    .draw-icon {
         width: 80px;
         height: 80px;
     }
