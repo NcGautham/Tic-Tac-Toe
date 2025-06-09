@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import './TicTacToe.css';
 import circle_icon from '../Assets/O.png';
 import cross_icon from '../Assets/X.png';
-import AnimatedBackground from './AnimatedBackground';
 
 // Sound effects
 const moveSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
@@ -100,7 +99,9 @@ export const TicTacToe = () => {
 
     return (
         <div className="container">
-            <AnimatedBackground />
+            {/* <h1 className="title">
+                TicTacToe Game in <span>React</span>
+            </h1> */}
             <div className="Board">
                 <div className="row1">
                     <div className={`boxes ${isWinningBox(0) ? 'winning' : ''}`} onClick={() => toggle(0)}>
